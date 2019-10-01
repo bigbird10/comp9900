@@ -1,0 +1,9 @@
+{% if user and user.is_authenticated %}
+{% include "baseLogin.html" %}
+{% else %}
+{% include "base.html" %}
+{% endif %}
+{% block title %}Homepage{% endblock %}
+{% block content %}
+    <h1> {{ message }} </h1>
+{% endblock %}
