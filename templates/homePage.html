@@ -1,0 +1,99 @@
+{% if user and user.is_authenticated %}
+{% include "baseLogin.html" %}
+{% else %}
+{% include "base.html" %}
+{% endif %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+
+    <div style="background-image:url({% static 'background/background.jpg' %});background-size:100% 120%; height:700px">
+    <form action="search" method="post">
+        <div class="bg-info" style="width:480px;height:500px;border-radius:10px;position:relative;left:150px;top:40px">
+            <div class="form-group" style="width:405px;position:relative;left:35px;top:50px">
+                <label for="where" style="font-family:courier;font-size:120%;">WHERE</label>
+                <input type="text" class="form-control input-lg" id="where" name="where" placeholder="Anywhere" >
+            </div>
+
+            <div class="form-group" style="position:relative;top:50px;width:200px;left:35px;">
+                <label for="check-in" style="font-family:courier;font-size:120%;">CHECK IN</label>
+                <div class="input-group">
+                <input type="text" class="form-control input-lg" id="check-in" name="check-in" placeholder="dd-mm-yyyy" value="" readonly style="background-color: white">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                </div>
+            </div>
+
+            <div class="form-group" style="width:200px;position:relative;top:-39px;left:240px">
+                <label for="check-out" style="font-family:courier;font-size:120%;">CHECK OUT</label>
+                <div class="input-group">
+                <input type="text" class="form-control input-lg" id="check-out" name="check-out" placeholder="dd-mm-yyyy" value="" readonly style="background-color: white">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                </div>
+            </div>
+
+            <div class="form-group" style="width:405px;position:relative;top:-39px;left:35px;">
+                <label for="guests" style="font-family:courier;font-size:120%;">GUESTS</label>
+                    <div>
+                        <input type="text" class="form-control input-lg" id="guests" name="guests" placeholder="1 guest" value="" style="width:357px;background-color: white;" readonly>
+                    <button class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" style="position:relative;float:right;top:-46px"><span class="caret"></span></button>
+                    <ul class="dropdown-menu" id="guestsNum" style="width:357px;">
+                        <li><a >1 guest</a></li>
+                        <li><a >2 guests</a></li>
+                        <li><a >3 guests</a></li>
+			        </ul>
+		            </div>
+            </div>
+
+            <div class="search_button" style="float:right;position:relative;top:-18px;left:78px">
+                <button class="btn btn-danger btn-lg" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+    </div>
+<script>
+    $('#guestsNum').on('click', function (e) {
+        $('#guests').val($(e.target).text());
+    })
+
+    $(function () {
+        var picker1 = $('#check-in').datepicker({
+            clearBtn: true,
+            startDate: '0d',
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd-mm-yyyy',
+        });
+
+        var picker2 = $('#check-out').datepicker({
+            autoclose: true,
+            clearBtn: true,
+            startDate: '0d',
+            format: 'dd-mm-yyyy',
+        });
+
+        picker1.on('changeDate', function (e) {
+            picker2.datepicker('setStartDate', e.date);
+        });
+
+        picker2.on('changeDate', function (e) {
+            picker1.datepicker('setEndDate', e.date);
+        });
+
+        picker1.on('clearDate', function () {
+            picker2.datepicker('setStartDate', '0d');
+        });
+
+        picker2.on('clearDate', function () {
+            picker1.datepicker('setEndDate', null);
+        });
+
+    });
+</script>
+{% endblock %}
