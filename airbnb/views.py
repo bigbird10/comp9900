@@ -8,7 +8,7 @@ import os
 
 
 def index(request):
-    return render(request, "index.html")
+    return render(request, 'homePage.html')
 
 
 def userRegister(request):
