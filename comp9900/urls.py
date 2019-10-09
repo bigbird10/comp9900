@@ -15,15 +15,17 @@ Including another URLconf
 """
 from airbnb import views
 from django.conf.urls import url
+from django.urls import path
 
 urlpatterns = [
-    url(r'userRegister/', views.userRegister, name="userRegister"),
-    url(r'userLogin/', views.userLogin, name="userLogin"),
-    url(r'index/', views.index, name="index"),
-    url(r'logout/', views.logout, name='logout'),
-    url(r'updateUserInfo', views.updateUserInfo, name="updateUserInfo"),
-    url(r'portraitUpload', views.portraitUpload, name="portraitUpload"),
-    url(r'listingAdd/listingStart', views.listingStart, name='listingStart'),
-    url(r'listingAdd/amenities', views.amenities, name='amenities'),
-    url(r'listingManage', views.listingManage, name='listingManage'),
+    path('userRegister/', views.userRegister, name="userRegister"),
+    path('userLogin/', views.userLogin, name="userLogin"),
+    path('index/', views.index, name="index"),
+    path('', views.index, name="index"),
+    path('logout/', views.logout, name='logout'),
+    path('updateUserInfo/', views.updateUserInfo, name="updateUserInfo"),
+    path('portraitUpload/', views.portraitUpload, name="portraitUpload"),
+    path('listingAdd/listingStart', views.listingStart, name='listingStart'),
+    path('listingAdd/amenities', views.amenities, name='amenities'),
+    path('listingManage/', views.listingManage, name='listingManage'),
 ]
