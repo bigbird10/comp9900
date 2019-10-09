@@ -1,0 +1,15 @@
+{% if user and user.is_authenticated %}
+    {% include 'baseLogin.html' %}
+    {% load static %}
+    <body style="background-image: url({% static 'background/blue.png' %})">
+    {% block content %}
+        <div class="container">
+            {% load crispy_forms_tags %}
+            {% crispy listingForm %}
+        </div>
+    {% endblock %}
+    </body>
+{% else %}
+    {% include 'base.html' %}
+    <h>Please login!</h>
+{% endif %}

@@ -1,0 +1,7 @@
+{% if user and user.is_authenticated %}
+    {% include 'baseLogin.html' %}
+    {% load static %}
+{% else %}
+    {% include 'base.html' %}
+    <h>Please login!</h>
+{% endif %}

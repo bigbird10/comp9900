@@ -56,3 +56,55 @@ class FileForm(forms.Form):
         self.helper.form_method = 'post'
         self.helper.form_action = 'portraitUpload'
         self.helper.add_input(Submit('upload', 'upload', css_class='btn-info'))
+
+
+class ListingForm(forms.Form):
+    propertyType = (
+        ('A', 'Apartment'),
+        ('B', 'House'),
+    )
+
+    roomType = (
+        ('A', 'Entire place'),
+        ('B', 'Private room'),
+        ('C', 'Shared room'),
+    )
+    attrs = {'class': 'form-control', 'style': 'width:30%'}
+
+    property_type = forms.ChoiceField(choices=propertyType, required=True, widget=forms.Select(attrs=attrs))
+    room_type = forms.ChoiceField(choices=roomType, required=True, widget=forms.Select(attrs=attrs))
+    Guests = forms.IntegerField(required=True, initial=1, widget=forms.NumberInput(attrs=attrs))
+    Bedrooms = forms.IntegerField(required=True, initial=1, widget=forms.NumberInput(attrs=attrs))
+    Beds = forms.IntegerField(required=True, initial=1, widget=forms.NumberInput(attrs=attrs))
+    Bathrooms = forms.FloatField(required=True, initial=1, widget=forms.NumberInput(attrs=attrs))
+
+    def __init__(self, *args, **kwargs):
+        super(ListingForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'place-form'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'listingAdd/amenities'
+        self.helper.add_input(Submit('Next', 'Next', css_class='btn-info'))
+
+
+class AmenitiesForm(forms.Form):
+    essentials = forms.BooleanField(label="Essentials", required=False)
+    air_conditioning = forms.BooleanField(label="Air conditioning", required=False)
+    heat = forms.BooleanField(label="Heat", required=False)
+    hair_dryer = forms.BooleanField(required=False)
+    wifi = forms.BooleanField(label="Wi-Fi", required=False)
+    iron = forms.BooleanField(label="Iron", required=False)
+    shampoo = forms.BooleanField(label="Shampoo", required=False)
+    desk = forms.BooleanField(label="Desk/workspace", required=False)
+
+    kitchen = forms.BooleanField(label="Kitchen", required=False)
+    washing = forms.BooleanField(label="Laundry – washing machine", required=False)
+    laundry_dryer = forms.BooleanField(label="Laundry - dryer", required=False)
+    parking = forms.BooleanField(label="Parking", required=False)
+    gym = forms.BooleanField(label="Gym", required=False)
+    pool = forms.BooleanField(label="Pool", required=False)
+    lift = forms.BooleanField(label="Lift", required=False)
+
+    fire_extinguisher = forms.BooleanField(label="Fire extinguisher", required=False)
+    smoke_detector = forms.BooleanField(label="Smoke detector", required=False)
+    first_aid_kit = forms.BooleanField(label="First aid kit", required=False)

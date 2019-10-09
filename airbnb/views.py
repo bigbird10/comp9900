@@ -2,12 +2,15 @@ from django.shortcuts import render, redirect
 from . import forms, models
 from django.contrib import auth
 from comp9900.settings import MEDIA_ROOT
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 import os
 
 # Create your views here.
 
 
 def index(request):
+    print(request.user)
     return render(request, 'homePage.html')
 
 
@@ -77,35 +80,35 @@ def updateUserInfo(request):
             birthday = form.cleaned_data['birthday']
             description = form.cleaned_data['description']
 
-            user = models.User.objects.get(id=request.user.id)
-            user.email = email
-            user.first_name = firstName
-            user.last_name = lastName
-            user.phone = phone
-            user.birthday = birthday
-            user.description = description
-            user.save()
+            user1 = models.User.objects.get(id=request.user.id)
+            user1.email = email
+            user1.first_name = firstName
+            user1.last_name = lastName
+            user1.phone = phone
+            user1.birthday = birthday
+            user1.description = description
+            user1.save()
 
             return redirect('/updateUserInfo/')
 
     dict = {}
-    user = models.User.objects.get(id=request.user.id)
-    if user.email:
-        dict['email'] = user.email
-    if user.first_name:
-        dict['firstName'] = user.first_name
-    if user.last_name:
-        dict['lastName'] = user.last_name
-    if user.phone:
-        dict['phone'] = user.phone
-    if user.birthday:
-        dict['birthday'] = user.birthday
-    if user.description:
-        dict['description'] = user.description
+    user1 = models.User.objects.get(id=request.user.id)
+    if user1.email:
+        dict['email'] = user1.email
+    if user1.first_name:
+        dict['firstName'] = user1.first_name
+    if user1.last_name:
+        dict['lastName'] = user1.last_name
+    if user1.phone:
+        dict['phone'] = user1.phone
+    if user1.birthday:
+        dict['birthday'] = user1.birthday
+    if user1.description:
+        dict['description'] = user1.description
 
     photo = "/pictures/e1b5f44d998ccbf08cf5571d45e93cbb.png"
-    if user.portrait:
-        photo = user.portrait
+    if user1.portrait:
+        photo = user1.portrait
 
     InitialUserForm = forms.UserInfoUpdateForm(initial=dict)
     FileForm = forms.FileForm()
@@ -125,6 +128,73 @@ def portraitUpload(request):
     return redirect('/updateUserInfo/')
 
 
+def listingManage(request):
+    if request.method == 'GET':
+        if request.user and request.user.is_authenticated:
+            listings = []
+            temp = models.Listing.objects.filter(host_id=request.user.id)
+            if temp.exists():
+                for item in temp:
+                    listings.append((item.id, item.city))
+            return render(request, 'listingManage.html', locals())
+    elif request.method == 'POST':
+        listing_id = int(request.POST.get('listing_id'))
+        delete = int(request.POST.get('delete'))
+        if delete == 0:
+            if listing_id == -1:
+                return HttpResponseRedirect(reverse('listingStart'))
+        else:
+            listings = []
+            temp = models.Listing.objects.filter(host_id=request.user.id)
+            if temp.exists():
+                for item in temp:
+                    listings.append((item.id, item.city))
+            return render(request, 'listingManage.html', locals())
+
+
+def listingStart(request):
+    if request.method == 'POST':
+        form = forms.ListingForm(request.POST)
+        if form.is_valid():
+            property_type = form.cleaned_data['property_type']
+            room_type = form.cleaned_data['room_type']
+            numOfGusets = form.cleaned_data['Guests']
+            numOfBedrooms = form.cleaned_data['Bedrooms']
+            numOfBeds = form.cleaned_data['Beds']
+            numOfBathrooms = form.cleaned_data['Bathrooms']
+
+            listing = models.Listing()
+            listing.host_id = request.user.id
+            listing.property_type = property_type
+            listing.room_type = room_type
+            listing.accommodates = numOfGusets
+            listing.bedrooms = numOfBedrooms
+            listing.beds = numOfBeds
+            listing.bathrooms = numOfBathrooms
+            listing.save()
+            return redirect('/index/')
+    else:
+        listingForm = forms.ListingForm()
+        return render(request, 'listingAdd/listingStart.html', locals())
+
+
+def amenities(request):
+    pass
+
+
 def logout(request):
     auth.logout(request)
     return redirect('/index/')
+
+
+def search(request):
+    pass
+    '''if request.method == 'GET':
+        return redirect('/index/')
+
+    if request.method == 'POST':
+        location = request.POST.get('where')
+        check_in = request.POST.get('check_in')
+        check_out = request.POST.get('check_out')
+        guest_num = request.POST.get('guests')
+        '''

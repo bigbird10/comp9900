@@ -1,0 +1,35 @@
+{% if user and user.is_authenticated %}
+    {% include 'baseLogin.html' %}
+    {% load static %}
+    {% block content %}
+        <body style="background-image: url({% static 'background/background.jpg' %});">
+            <div class="container">
+                <table class="table">
+                    <tr>
+                        <td>property locations</td>
+                    </tr>
+                    {% for item in listings %}
+                        <form action="/listingManage/" method="post">
+                        {% csrf_token %}
+                        <tr>
+                            <td><label> {{ item.1 }} </label></td>
+                            <input type="hidden" name="listing_id" value={{ item.0 }}>
+                            <input type="hidden" name="delete" value=1>
+                            <td><input type="submit" value="reload"></td>
+                        </tr>
+                        </form>
+                    {% endfor %}
+                </table>
+                <form action="/listingManage/" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="listing_id" value=-1>
+                    <input type="hidden" name="delete" value=0>
+                    <input type="submit" value="Add a new listing">
+                </form>
+            </div>
+        </body>
+    {% endblock %}
+{% else %}
+    {% include 'base.html' %}
+    <h>Please login!</h>
+{% endif %}
