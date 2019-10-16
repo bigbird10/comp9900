@@ -27,5 +27,9 @@ urlpatterns = [
     path('portraitUpload/', views.portraitUpload, name="portraitUpload"),
     path('listingAdd/listingStart', views.listingStart, name='listingStart'),
     path('listingAdd/amenities', views.amenities, name='amenities'),
+    path('listingAdd/scene', views.scene, name='scene'),
+    path('listingAdd/description', views.description, name='description'),
     path('listingManage/', views.listingManage, name='listingManage'),
+    path('listingAdd/location', views.location, name='location'),
+    path('calendar', views.calendar, name='calendar'),
 ]

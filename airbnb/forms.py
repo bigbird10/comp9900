@@ -1,7 +1,7 @@
 from django import forms
 from datetime import datetime
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
 class UserForm(forms.Form):
     attrs = {'class': 'form-control'}
@@ -83,7 +83,24 @@ class ListingForm(forms.Form):
         self.helper = FormHelper(self)
         self.helper.form_id = 'place-form'
         self.helper.form_method = 'post'
-        self.helper.form_action = 'listingAdd/amenities'
+        self.helper.form_action = 'listingStart'
+        self.helper.add_input(Submit('Next', 'Next', css_class='btn-info'))
+
+
+class DescriptionForm(forms.Form):
+    attrs = {'class': 'form-control', 'style': 'width:30%'}
+
+    name = forms.CharField(label="Listing title", max_length=20, widget=forms.TextInput(attrs=attrs))
+    summary = forms.CharField(label="Write a quick summary of your place.", max_length=100, widget=forms.TextInput(attrs=attrs))
+    neighborhood = forms.CharField(max_length=100, widget=forms.TextInput(attrs=attrs))
+    transit = forms.CharField(max_length=100, widget=forms.TextInput(attrs=attrs))
+
+    def __init__(self, *args, **kwargs):
+        super(DescriptionForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'place-form'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'description'
         self.helper.add_input(Submit('Next', 'Next', css_class='btn-info'))
 
 
@@ -97,7 +114,7 @@ class AmenitiesForm(forms.Form):
     shampoo = forms.BooleanField(label="Shampoo", required=False)
     desk = forms.BooleanField(label="Desk/workspace", required=False)
 
-    kitchen = forms.BooleanField(label="Kitchen", required=False)
+    '''kitchen = forms.BooleanField(label="Kitchen", required=False)
     washing = forms.BooleanField(label="Laundry – washing machine", required=False)
     laundry_dryer = forms.BooleanField(label="Laundry - dryer", required=False)
     parking = forms.BooleanField(label="Parking", required=False)
@@ -108,3 +125,37 @@ class AmenitiesForm(forms.Form):
     fire_extinguisher = forms.BooleanField(label="Fire extinguisher", required=False)
     smoke_detector = forms.BooleanField(label="Smoke detector", required=False)
     first_aid_kit = forms.BooleanField(label="First aid kit", required=False)
+    '''
+
+    def __init__(self, *args, **kwargs):
+        super(AmenitiesForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'place-form'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'amenities'
+        self.helper.add_input(Submit('Next', 'Next', css_class='btn-info'))
+        self.helper.form_class = 'form_horizontal'
+        self.helper.layout = Layout(
+            Fieldset(
+                Div('essentials', css_class='checkbox'),
+                Div('air_conditioning', css_class='checkbox'),
+                Div('heat', css_class='checkbox'),
+                Div('hair_dryer', css_class='checkbox'),
+                Div('wifi', css_class='checkbox'),
+                Div('iron', css_class='checkbox'),
+                Div('shampoo', css_class='checkbox'),
+                Div('desk', css_class='checkbox')
+            ),
+        )
+
+
+class SceneFileForm(forms.Form):
+    file = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control', 'style': 'width:30%'}))
+
+    def __init__(self, *args, **kwargs):
+        super(SceneFileForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'description-form'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'scene'
+        self.helper.add_input(Submit('upload', 'upload', css_class='btn-info'))

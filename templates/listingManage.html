@@ -9,13 +9,14 @@
                         <td>property locations</td>
                     </tr>
                     {% for item in listings %}
-                        <form action="/listingManage/" method="post">
+                        <form id="form_{{ forloop.counter }}" action="/listingManage/" method="post">
                         {% csrf_token %}
                         <tr>
                             <td><label> {{ item.1 }} </label></td>
                             <input type="hidden" name="listing_id" value={{ item.0 }}>
-                            <input type="hidden" name="delete" value=1>
+                            <input type="hidden" name="delete" value=0 id="delete_{{ forloop.counter }}">
                             <td><input type="submit" value="reload"></td>
+                            <td><button id="delete" value="{{ forloop.counter }}">Delete</button></td>
                         </tr>
                         </form>
                     {% endfor %}
@@ -27,6 +28,13 @@
                     <input type="submit" value="Add a new listing">
                 </form>
             </div>
+            <script>
+                $('#delete').click(function (e) {
+                    var counter = $(e.target).val();
+                    $('#delete_' + counter).val("1");
+                    $('#form_' + counter).submit();
+                })
+            </script>
         </body>
     {% endblock %}
 {% else %}

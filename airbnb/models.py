@@ -28,3 +28,18 @@ class Listing(models.Model):
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     amenities = models.TextField(blank=True, null=True)
+    summary = models.TextField(blank=True, null=True)
+    transit = models.TextField(blank=True, null=True)
+    neighborhood = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, null=True)
+    '''price = models.DecimalField(blank=True, null=True)
+    picture = models.URLField(blank=True, null=True)'''
+
+
+class Scene(models.Model):
+    listing_id = models.BigIntegerField()
+    picture = models.URLField(blank=True, null=True)
+
+
+class Calendar(models.Model):
+    listing_id = models.BigIntegerField()

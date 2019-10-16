@@ -1,0 +1,31 @@
+{% if user and user.is_authenticated %}
+    {% include 'baseLogin.html' %}
+    {% load static %}
+    <body style="background-image: url({% static 'background/blue.png' %})">
+    {% block content %}
+        <div class="grid-container">
+            {% for item in pictures %}
+                <form action="scene" method="post">
+                {% csrf_token %}
+                <div>
+                    <img class="img-fluid" src="{% static item.1 %}" height="200" width="150">
+                </div>
+                </form>
+            {% endfor %}
+        </div>
+        <div>
+            {% load crispy_forms_tags %}
+            {% crispy sceneFileForm %}
+        </div>
+        <div>
+            <form action="description" method="get">
+                {% csrf_token %}
+                <input type="submit" value="Next">
+            </form>
+        </div>
+    {% endblock %}
+    </body>
+{% else %}
+    {% include 'base.html' %}
+    <h>Please login!</h>
+{% endif %}
