@@ -138,7 +138,7 @@ def listingManage(request):
             temp = models.Listing.objects.filter(host_id=request.user.id)
             if temp.exists():
                 for item in temp:
-                    listings.append((item.id, item.city))
+                    listings.append((item.id, item.city, item.name))
             return render(request, 'listingManage.html', locals())
     elif request.method == 'POST':
         listing_id = int(request.POST.get('listing_id'))
@@ -159,7 +159,7 @@ def listingManage(request):
                 listings = []
                 if models.Listing.objects.filter(host_id=request.user.id).exists():
                     for item in models.Listing.objects.filter(host_id=request.user.id):
-                        listings.append((item.id, item.city))
+                        listings.append((item.id, item.city, item.name))
             return render(request, 'listingManage.html', locals())
 
 
@@ -322,8 +322,16 @@ def location(request):
         return render(request, "listingAdd/location.html", {'lat': default_lat, 'lng': default_lng})
 
 
-def calendar(request):
-    pass
+def listingInfo(request, listing_id):
+    listing = models.Listing.objects.get(pk=listing_id)
+    pictures = models.Scene.objects.filter(listing_id=listing_id)
+    L = []
+    for item in listing.amenities.split(','):
+        L.append(item)
+    total = {'name': listing.name, 'city': listing.city, 'price': listing.price, 'amenities': L}
+    if pictures.exists():
+        total['picture'] = pictures[0].picture
+    return render(request, 'listingInfo.html', {'listing_id': listing_id, 'total': total})
 
 
 def logout(request):

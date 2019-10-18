@@ -1,0 +1,33 @@
+{% if user and user.is_authenticated %}
+    {% include 'baseLogin.html' %}
+{% else %}
+    {% include 'base.html' %}
+    <h>Please Login!</h>
+{% endif %}
+
+{% load static %}
+{% block content %}
+    <body>
+    <div>
+        <div>
+            <div><img src="{{ total.picture }}" style="position: relative; left: 350px; width: 50%"></div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>{{ total.name }}</h3>
+                    <div>
+                        <ul>
+                            <li>City: {{ total.city }}</li>
+                            <li>Price: {{ total.price }}</li>
+                            {% for item in total.amenities %}
+                                <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+{% endblock %}

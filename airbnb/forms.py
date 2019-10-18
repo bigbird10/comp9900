@@ -1,7 +1,7 @@
 from django import forms
 from datetime import datetime
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Fieldset, Div
+from crispy_forms.layout import Submit, Layout, Fieldset, Row, Column, Reset, Div
 
 class UserForm(forms.Form):
     attrs = {'class': 'form-control'}
@@ -14,14 +14,39 @@ class UserRegisterForm(forms.Form):
     years_list = range(datetime.now().year - 100, datetime.now().year)
     attrs = {'class': 'form-control'}
 
-    email = forms.EmailField(label="Email", max_length=100, widget=forms.TextInput(attrs=attrs))
-    username = forms.CharField(label="Username", max_length=100, widget=forms.TextInput(attrs=attrs))
+    email = forms.EmailField(label="Email", widget=forms.TextInput(attrs=attrs))
+    username = forms.CharField(label="Username", widget=forms.TextInput(attrs=attrs))
     password = forms.CharField(label="Password", min_length=10, max_length=20, widget=forms.PasswordInput(attrs=attrs))
-    firstName = forms.CharField(label="First Name", max_length=100, widget=forms.TextInput(attrs=attrs))
-    lastName = forms.CharField(label="Last Name", max_length=100, widget=forms.TextInput(attrs=attrs))
+    firstName = forms.CharField(label="First Name", widget=forms.TextInput(attrs=attrs))
+    lastName = forms.CharField(label="Last Name", widget=forms.TextInput(attrs=attrs))
     phone = forms.RegexField(regex=r'^4\d{8}')
     birthday = forms.DateField(label="Birthday", widget=forms.SelectDateWidget(years=years_list))
 
+    def __init__(self, *args, **kwargs):
+        super(UserRegisterForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'userRegister'
+        self.helper.layout = Layout(
+            Row(
+                Column('username', css_class='form-group col-md-6 mb-0'),
+                Column('password', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('email', css_class='form-group col-md-6 mb-0'),
+                Column('phone', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('firstName', css_class='form-group col-md-6 mb-0'),
+                Column('lastName', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            'birthday',
+            Reset('reset', 'Reset', css_class="btn btn-default pull-left"),
+            Submit('submit', 'Submit', css_class="btn btn-default pull-right")
+        )
 
 class UserInfoUpdateForm(forms.Form):
     years_list = range(datetime.now().year - 100, datetime.now().year)
@@ -39,7 +64,6 @@ class UserInfoUpdateForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(UserInfoUpdateForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
-        self.helper.form_id = 'description-form'
         self.helper.form_method = 'post'
         self.helper.form_action = 'updateUserInfo'
         self.helper.add_input(Submit('update', 'update', css_class='btn-info'))

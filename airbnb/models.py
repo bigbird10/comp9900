@@ -32,8 +32,8 @@ class Listing(models.Model):
     transit = models.TextField(blank=True, null=True)
     neighborhood = models.TextField(blank=True, null=True)
     name = models.TextField(blank=True, null=True)
-    '''price = models.DecimalField(blank=True, null=True)
-    picture = models.URLField(blank=True, null=True)'''
+    price = models.DecimalField(decimal_places=1, max_digits=6, blank=True, null=True)
+    '''picture = models.URLField(blank=True, null=True)'''
 
 
 class Scene(models.Model):

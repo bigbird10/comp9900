@@ -6,12 +6,14 @@
             <div class="container">
                 <table class="table">
                     <tr>
+                        <td>property name</td>
                         <td>property locations</td>
                     </tr>
                     {% for item in listings %}
                         <form id="form_{{ forloop.counter }}" action="/listingManage/" method="post">
                         {% csrf_token %}
                         <tr>
+                            <td><label><a href="{% url 'listingInfo' item.0 %}">{{ item.2 }}</a> </label></td>
                             <td><label> {{ item.1 }} </label></td>
                             <input type="hidden" name="listing_id" value={{ item.0 }}>
                             <input type="hidden" name="delete" value=0 id="delete_{{ forloop.counter }}">
