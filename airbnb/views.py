@@ -173,6 +173,7 @@ def listingStart(request):
             numOfBedrooms = form.cleaned_data['Bedrooms']
             numOfBeds = form.cleaned_data['Beds']
             numOfBathrooms = form.cleaned_data['Bathrooms']
+            price = form.cleaned_data['Price']
 
             if 'listing_id' in request.session:
                 listing_id = request.session['listing_id']
@@ -187,6 +188,7 @@ def listingStart(request):
             listing.bedrooms = numOfBedrooms
             listing.beds = numOfBeds
             listing.bathrooms = numOfBathrooms
+            listing.price = price
             listing.save()
             request.session['listing_id'] = listing.id
             return HttpResponseRedirect(reverse('amenities'))
@@ -200,7 +202,8 @@ def listingStart(request):
                 "Guests": listing.accommodates,
                 "Bedrooms": listing.bedrooms,
                 "Beds": listing.beds,
-                "Bathrooms": listing.bathrooms
+                "Bathrooms": listing.bathrooms,
+                "Price": listing.price
             })
         else:
             listingForm = forms.ListingForm()

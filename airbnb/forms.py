@@ -101,6 +101,7 @@ class ListingForm(forms.Form):
     Bedrooms = forms.IntegerField(required=True, initial=1, widget=forms.NumberInput(attrs=attrs))
     Beds = forms.IntegerField(required=True, initial=1, widget=forms.NumberInput(attrs=attrs))
     Bathrooms = forms.FloatField(required=True, initial=1, widget=forms.NumberInput(attrs=attrs))
+    Price = forms.DecimalField(required=True, initial=100, widget=forms.NumberInput(attrs=attrs))
 
     def __init__(self, *args, **kwargs):
         super(ListingForm, self).__init__(*args, **kwargs)
