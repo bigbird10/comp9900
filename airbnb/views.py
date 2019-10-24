@@ -308,7 +308,8 @@ def location(request):
         listing.latitude = latitude
         listing.longitude = longitude
 
-        g = geocoder.google([str(latitude), str(longitude)], method='reverse')
+        g = geocoder.google([str(latitude), str(longitude)], method='reverse', key=googlekey)
+        print(g.address)
         if g.ok:
             print('success')
             listing.city = g.city
