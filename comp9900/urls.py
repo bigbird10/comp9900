@@ -31,5 +31,8 @@ urlpatterns = [
     path('listingAdd/description', views.description, name='description'),
     path('listingManage/', views.listingManage, name='listingManage'),
     path('listingAdd/location', views.location, name='location'),
+    path('search/', views.search, name='search'),
+    path('history/', views.bookingHistory, name='history'),
+    url(r'booking/(?P<listing_id>\d+)$', views.booking, name='booking'),
     url(r'listingInfo/(?P<listing_id>\d+)$', views.listingInfo, name='listingInfo')
 ]

@@ -1,0 +1,23 @@
+{% if user and user.is_authenticated %}
+    {% include "baseLogin.html" %}
+    {% load static %}
+    {% block content %}
+        <div><h3>Booking Confirm</h3></div>
+        <div class="container">
+            <form action="/booking/{{ listing_id }}" method="post">
+                <div>
+                    <ul>
+                        <li>{{ name }}</li>
+                        <li>{{ check_in }}</li>
+                        <li>{{ check_out }}</li>
+                        <li>{{ guests }}</li>
+                        <li>{{ total_price }}</li>
+                    </ul>
+                </div>
+                <button class="btn btn-default" type="submit">Confirm</button>
+            </form>
+        </div>
+    {% endblock %}
+{% else %}
+    {% include "base.html" %}
+{% endif %}

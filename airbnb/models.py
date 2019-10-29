@@ -41,5 +41,14 @@ class Scene(models.Model):
     picture = models.URLField(blank=True, null=True)
 
 
+class Booking(models.Model):
+    booking_id = models.AutoField(primary_key=True)
+    listing_id = models.BigIntegerField()
+    guest_id = models.BigIntegerField()
+    check_in = models.DateField()
+    check_out = models.DateField()
+    total_price = models.DecimalField(decimal_places=1, max_digits=6, blank=True, null=True)
+
+
 class Calendar(models.Model):
     listing_id = models.BigIntegerField()

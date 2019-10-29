@@ -32,13 +32,16 @@
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
+              <li class="active"><a href="/history/" style="position:relative;right:22px;top:7px;background:rgba(255,255,255,0);color:rgb(0,0,0);font-size:130%;font-family: 'Spinnaker', sans-serif;border:none">My Bookings</a></li>
               <li class="active"><a href="/listingManage/" style="position:relative;right:22px;top:7px;background:rgba(255,255,255,0);color:rgb(0,0,0);font-size:130%;font-family: 'Spinnaker', sans-serif;border:none">My places</a></li>
-              <li class="dropdown"><button class="btn btn-primary dropdown-toggle btn-lg" type="button" data-toggle="dropdown" style="position:relative;right:22px;top:7px;background:rgba(255,255,255,0);color:rgb(0,0,0);font-family: 'Spinnaker', sans-serif;border:none">My account
+              <li class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle btn-lg" type="button" data-toggle="dropdown" style="position:relative;right:22px;top:7px;background:rgba(255,255,255,0);color:rgb(0,0,0);font-family: 'Spinnaker', sans-serif;border:none">My account
               <span class="caret"></span></button>
               <ul class="dropdown-menu">
                   <li><a href="/updateUserInfo">Profile</a></li>
                   <li><a href="/logout/">Logout</a></li>
-              </ul></li>
+              </ul>
+              </li>
 {#              <li style="position:relative;right:30px;top:5px;background:rgba(255,255,255,0);font-size:130%;color:rgb(255,255,255);font-family: 'Spinnaker', sans-serif;border:none"><a href="/hostListingManager/">My account</a></li>#}
 {#              <li style="position:relative;right:30px;top:5px;background:rgba(255,255,255,0);font-size:130%;color:rgb(255,255,255);font-family: 'Spinnaker', sans-serif;border:none"><a href="/wishList/">Wish List</a></li>#}
           </ul>
@@ -48,3 +51,4 @@
 
     {% block content %}{% endblock %}
 </body>
+</html>

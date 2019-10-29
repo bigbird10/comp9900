@@ -1,0 +1,39 @@
+{% if user and user.is_authenticated %}
+    {% include "baseLogin.html" %}
+{% else %}
+    {% include "base.html" %}
+{% endif %}
+
+{% load static %}
+{% block content %}
+    <body>
+    <div class="container">
+        <h1>Property Grid</h1>
+    </div>
+    <section id="property">
+        <header class="section-header text-center">
+            <div class="container">
+                <h2 class="pull-left">Showing {{ number }}</h2>
+            </div>
+        </header>
+        <div class="container section-layout">
+            <div class="row">
+                {% for item in results %}
+                 <div class="col-lg-4 col-sm-6"><article>
+                     <figure class="feature-image">
+                         <img src="{% static item.url %}">
+                     </figure>
+                     <div>
+                         <div class="pull-left">
+                             <h4><a href="{% url 'listingInfo' item.id %}">{{ item.name }}</a></h4>
+                             <h4>{{ item.price }}</h4>
+                         </div>
+                     </div>
+                 </article>
+                 </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    </body>
+{% endblock %}

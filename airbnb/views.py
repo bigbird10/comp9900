@@ -6,6 +6,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 import os
 import geocoder
+import datetime
+import pandas as pd
 
 # Create your views here.
 
@@ -132,6 +134,7 @@ def listingManage(request):
     if 'listing_id' in request.session:
         del request.session['listing_id']
 
+    request.session['role'] = "host"
     if request.method == 'GET':
         if request.user and request.user.is_authenticated:
             listings = []
@@ -329,10 +332,10 @@ def location(request):
 def listingInfo(request, listing_id):
     listing = models.Listing.objects.get(pk=listing_id)
     pictures = models.Scene.objects.filter(listing_id=listing_id)
-    L = []
+    l = []
     for item in listing.amenities.split(','):
-        L.append(item)
-    total = {'name': listing.name, 'city': listing.city, 'price': listing.price, 'amenities': L}
+        l.append(item)
+    total = {'name': listing.name, 'city': listing.city, 'price': listing.price, 'amenities': l}
     if pictures.exists():
         total['picture'] = pictures[0].picture
     return render(request, 'listingInfo.html', {'listing_id': listing_id, 'total': total})
@@ -344,13 +347,107 @@ def logout(request):
 
 
 def search(request):
-    pass
-    '''if request.method == 'GET':
-        return redirect('/index/')
+    if request.method == 'GET':
+        return HttpResponseRedirect('/index/')
+
+    guests = 0
+    results = []
+    request.session['role'] = "guest"
 
     if request.method == 'POST':
         location = request.POST.get('where')
-        check_in = request.POST.get('check_in')
-        check_out = request.POST.get('check_out')
+        check_in = request.POST.get('check-in')
+        check_out = request.POST.get('check-out')
         guest_num = request.POST.get('guests')
-        '''
+
+        request.session['check_in'] = check_in
+        request.session['check_out'] = check_out
+        request.session['guest_num'] = guest_num
+
+        if guest_num == "1 guest":
+            guests = 1
+        elif guest_num == "2 guests":
+            guests = 2
+        elif guest_num == "3 guests":
+            guests = 3
+        res = models.Listing.objects.filter(city__icontains=location, accommodates__gte=guests)
+
+        for item in res:
+            if check(check_in, check_out, item.id):
+                pic_url = models.Scene.objects.filter(listing_id=item.id)[0].picture
+                results.append({"id": item.id, "url": pic_url, "name": item.name, "price": item.price})
+
+        return render(request, 'searchList.html', {'results': results, 'number': len(results)})
+
+
+def check(check_in, check_out, listing_id):
+    bookings = models.Booking.objects.filter(listing_id=listing_id)
+    check_in = check_in.split('-')
+    check_out = check_out.split('-')
+
+    for item in bookings:
+        start = datetime.datetime(int(check_in[2]), int(check_in[1]), int(check_in[0]))
+        end = datetime.datetime(int(check_out[2]), int(check_out[1]), int(check_out[0]))
+        pre_in = str(item.check_in).split('-')
+        pre_out = str(item.check_out).split('-')
+        pre_in = datetime.datetime(int(pre_in[0]), int(pre_in[1]), int(pre_in[2]))
+        pre_out = datetime.datetime(int(pre_out[0]), int(pre_out[1]), int(pre_out[2]))
+        if end <= pre_in or start >= pre_out:
+            continue
+        else:
+            return False
+    return True
+
+
+def booking(request, listing_id):
+    check_in = request.session['check_in'].split('-')
+    check_out = request.session['check_out'].split('-')
+    guests = request.session['guest_num']
+    res = models.Listing.objects.get(pk=listing_id)
+
+    start = datetime.datetime(int(check_in[2]), int(check_in[1]), int(check_in[0]))
+    end = datetime.datetime(int(check_out[2]), int(check_out[1]), int(check_out[0]))
+    total_days = (end - start).days
+
+    if total_days < 1:
+        total_days = 1
+
+    total_price = res.price * total_days
+
+    check_in = check_in[2] + "-" + check_in[1] + "-" + check_in[0]
+    check_out = check_out[2] + "-" + check_out[1] + "-" + check_out[0]
+
+    if request.method == 'GET':
+        return render(request, 'bookingConfirm.html', {'listing_id': listing_id, 'name': res.name, 'guests': guests,
+                        'check_in': check_in, 'check_out': check_out, 'total_price': total_price})
+    else:
+        new_booking = models.Booking()
+        new_booking.listing_id = listing_id
+        new_booking.check_in = check_in
+        new_booking.check_out = check_out
+        new_booking.guest_id = request.user.id
+        new_booking.total_price = total_price
+        new_booking.save()
+
+        return HttpResponseRedirect(reverse('index'))
+
+
+def bookingHistory(request):
+    user_id = request.user.id
+    bookings = models.Booking.objects.filter(guest_id=user_id)
+
+    res = []
+
+    for item in bookings:
+        listing = models.Listing.objects.get(pk=item.listing_id)
+
+        res.append({'name': listing.name, 'check_in': item.check_in, 'check_out': item.check_out,
+                    'price': item.total_price})
+
+    return render(request, 'history.html', {'results': res})
+
+
+
+
+
+

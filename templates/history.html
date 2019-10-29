@@ -1,0 +1,27 @@
+{% if user is not None and user.is_authenticated %}
+{% include 'baseLogin.html' %}
+    {% load static %}
+    {% block content %}
+        <div><h3>Booking History</h3></div>
+        <div class="container">
+            <table class="table">
+                <tr>
+                    <td>Property Name</td>
+                    <td>Check in</td>
+                    <td>Check out</td>
+                    <td>Total Price</td>
+                </tr>
+                {% for item in results %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.check_in }}</td>
+                        <td>{{ item.check_out }}</td>
+                        <td>{{ item.price }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endblock %}
+{% else %}
+{% include 'base.html' %}
+{% endif %}

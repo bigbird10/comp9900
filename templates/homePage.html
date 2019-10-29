@@ -6,12 +6,13 @@
 {% load static %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-datepicker3.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
     <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
 
     <div style="background-image:url({% static 'background/background.jpg' %});background-size:100% 120%; height:700px">
-    <form action="search" method="post">
+    <form action="/search/" method="post">
+        {% csrf_token %}
         <div class="bg-info" style="width:480px;height:500px;border-radius:10px;position:relative;left:150px;top:40px">
             <div class="form-group" style="width:405px;position:relative;left:35px;top:50px">
                 <label for="where" style="font-family:courier;font-size:120%;">WHERE</label>
@@ -61,7 +62,7 @@
 <script>
     $('#guestsNum').on('click', function (e) {
         $('#guests').val($(e.target).text());
-    })
+    });
 
     $(function () {
         var picker1 = $('#check-in').datepicker({
@@ -81,6 +82,7 @@
 
         picker1.on('changeDate', function (e) {
             picker2.datepicker('setStartDate', e.date);
+            console.log($('#check-in').val());
         });
 
         picker2.on('changeDate', function (e) {
@@ -89,6 +91,7 @@
 
         picker1.on('clearDate', function () {
             picker2.datepicker('setStartDate', '0d');
+            console.log($('#check-in').val());
         });
 
         picker2.on('clearDate', function () {
